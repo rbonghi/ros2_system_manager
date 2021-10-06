@@ -24,31 +24,32 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, 
 # EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import argparse
 import re
+import os
+from random import choice
+from string import ascii_letters
+from base64 import b64encode
+# Logging
 import logging
-from .common import get_var
-from .service import RobotManagerServer
+# Load Author
+AUTH_RE = re.compile(r""".*__author__ = ["'](.*?)['"]""", re.S)
 # Create logger
 logger = logging.getLogger(__name__)
-# Version match
-VERSION_RE = re.compile(r""".*__version__ = ["'](.*?)['"]""", re.S)
 
 
-def main():
-    parser = argparse.ArgumentParser(
-        description='robot docker manager',
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    # Configuration
-    parser.add_argument('--force', dest='force', help=argparse.SUPPRESS, action="store_true", default=False)
-    parser.add_argument('-v', '--version', action='version', version='%(prog)s {version}'.format(version=get_var(VERSION_RE)))
-    # Parse arguments
-    args = parser.parse_args()
-    # Initialize stats server
-    server = RobotManagerServer(force=args.force)
-    logger.info("robot_manager server loaded")
-    server.loop_for_ever()
+def get_var(MATCH_RE):
+    """
+    Show the version of this package
+    :return: Version number
+    :rtype: string
+    """
+    # Load version package
+    with open(os.path.join(os.path.abspath(os.path.dirname(__file__)), "__init__.py")) as fp:
+        match = MATCH_RE.match(fp.read())
+        value = match.group(1) if match else ''.join(choice(ascii_letters) for i in range(16))
+    return value
 
-if __name__ == "__main__":
-    main()
+
+def get_key():
+    return str(b64encode(get_var(AUTH_RE).encode("utf-8")))
 # EOF

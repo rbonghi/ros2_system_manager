@@ -26,6 +26,9 @@
 
 # Always prefer setuptools over distutils
 from setuptools import setup, find_packages
+from setuptools.command.develop import develop
+from setuptools.command.install import install
+from shutil import copyfile
 from os import path
 import os
 import sys
@@ -34,6 +37,33 @@ import logging
 
 logging.basicConfig(stream=sys.stderr, level=logging.INFO)
 log = logging.getLogger()
+
+
+def runningInDocker():
+    """
+    https://gist.github.com/anantkamath/623ce7f5432680749e087cf8cfba9b69
+    https://stackoverflow.com/questions/23513045/how-to-check-if-a-process-is-running-inside-docker-container
+    """
+    with open('/proc/self/cgroup', 'r') as procfile:
+        for line in procfile:
+            fields = line.strip().split('/')
+            if 'docker' in fields:
+                return True
+    return False
+
+
+def is_superuser():
+    return os.getuid() == 0
+
+
+def list_scripts():
+    # Load scripts to install
+    scripts = []
+    return scripts
+
+
+def list_services():
+    return ["services/{file}".format(file=f) for f in os.listdir("services") if os.path.isfile(os.path.join("services", f))]
 
 
 here = os.path.abspath(os.path.dirname(__file__))
@@ -55,6 +85,62 @@ with open(os.path.join(here, "robot_docker_manager", "__init__.py")) as fp:
     )
 # Store version package
 version = VERSION
+
+
+def install_services(copy):
+    print(f"System prefix {sys.prefix}")
+    # Make jetson stats folder
+    root = sys.prefix + "/local/robot_manager/"
+    if not os.path.exists(root):
+        os.makedirs(root)
+    # Copy all files
+    for f_service in list_services():
+        folder, _ = os.path.split(__file__)
+        path = root + os.path.basename(f_service)
+        # remove if exist file
+        if os.path.exists(path):
+            os.remove(path)
+        # Copy or link file
+        if copy:
+            type_service = "Copying"
+            copyfile(folder + "/" + f_service, path)
+        else:
+            type_service = "Linking"
+            os.symlink(folder + "/" + f_service, path)
+        # Prompt message
+        print("{type} {file} -> {path}".format(type=type_service, file=os.path.basename(f_service), path=path))
+
+
+def pre_installer(installer, obj, copy):
+    # Check if installing in super user
+    if not is_superuser():
+        print("----------------------------------------")
+        print("Install on your host using superuser permission, like:")
+        print("sudo -H pip install -U robot-manager")
+        sys.exit(1)
+    # Install services
+    if not runningInDocker():
+        print("Install services")
+        robot_manager_is_active = os.system('systemctl is-active --quiet robot_manager') == 0
+        install_services(copy)
+    # Run the default installation script
+    installer.run(obj)
+
+
+class PostInstallCommand(install):
+    """Installation mode."""
+    def run(self):
+        # Run the uninstaller before to copy all scripts
+        pre_installer(install, self, True)
+
+
+class PostDevelopCommand(develop):
+    """Post-installation for development mode."""
+    def run(self):
+        # Run the uninstaller before to copy all scripts
+        # Install services (linking)
+        pre_installer(develop, self, False)
+
 
 # Configuration setup module
 setup(
@@ -103,11 +189,13 @@ setup(
     zip_safe=False,
     # Add jetson_variables in /opt/jetson_stats
     # http://docs.python.org/3.4/distutils/setupscript.html#installing-additional-files
-    data_files=[],
+    data_files=[('robot_docker_manager', list_services())],
     # Install extra scripts
-    cmdclass={},
-    # The following provide a command called `robot_manager`
+    scripts=list_scripts(),
+    cmdclass={'develop': PostDevelopCommand,
+              'install': PostInstallCommand},
+    # The following provide a command called `robot_docker_manager`
     entry_points={'console_scripts': [
-        'robot_manager=robot_docker_manager.__main__:main',]},
+        'robot_docker_manager=robot_docker_manager.__main__:main',]},
 )
 # EOF

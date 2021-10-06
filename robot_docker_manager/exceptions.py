@@ -24,31 +24,19 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, 
 # EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import argparse
-import re
-import logging
-from .common import get_var
-from .service import RobotManagerServer
-# Create logger
-logger = logging.getLogger(__name__)
-# Version match
-VERSION_RE = re.compile(r""".*__version__ = ["'](.*?)['"]""", re.S)
 
+class RobotException(Exception):
+    """ Robot manager general exception """
 
-def main():
-    parser = argparse.ArgumentParser(
-        description='robot docker manager',
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    # Configuration
-    parser.add_argument('--force', dest='force', help=argparse.SUPPRESS, action="store_true", default=False)
-    parser.add_argument('-v', '--version', action='version', version='%(prog)s {version}'.format(version=get_var(VERSION_RE)))
-    # Parse arguments
-    args = parser.parse_args()
-    # Initialize stats server
-    server = RobotManagerServer(force=args.force)
-    logger.info("robot_manager server loaded")
-    server.loop_for_ever()
+    def __init__(self, message, errors=""):
+        super(RobotException, self).__init__(message, errors)
+        # Now for your custom code...
+        self.message = message
+        self.errors = errors
 
-if __name__ == "__main__":
-    main()
+    def __repr__(self):
+        return str(self.message)
+
+    def __str__(self):
+        return str(self.message)
 # EOF

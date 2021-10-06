@@ -26,6 +26,9 @@
 
 # flake8: noqa
 
+from .robot_manager import robot_manager
+from .exceptions import RobotException
+
 __author__ = "Raffaello Bonghi"
 __email__ = "raffaello@rnext.it"
 # Version package

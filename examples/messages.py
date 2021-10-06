@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 # -*- coding: UTF-8 -*-
 # Copyright (C) 2021, Raffaello Bonghi <raffaello@rnext.it>
 # All rights reserved
@@ -24,31 +25,13 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, 
 # EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import argparse
-import re
-import logging
-from .common import get_var
-from .service import RobotManagerServer
-# Create logger
-logger = logging.getLogger(__name__)
-# Version match
-VERSION_RE = re.compile(r""".*__version__ = ["'](.*?)['"]""", re.S)
+from robot_docker_manager import robot_manager, RobotException
 
-
-def main():
-    parser = argparse.ArgumentParser(
-        description='robot docker manager',
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-    # Configuration
-    parser.add_argument('--force', dest='force', help=argparse.SUPPRESS, action="store_true", default=False)
-    parser.add_argument('-v', '--version', action='version', version='%(prog)s {version}'.format(version=get_var(VERSION_RE)))
-    # Parse arguments
-    args = parser.parse_args()
-    # Initialize stats server
-    server = RobotManagerServer(force=args.force)
-    logger.info("robot_manager server loaded")
-    server.loop_for_ever()
 
 if __name__ == "__main__":
-    main()
-# EOF
+    print("Send shutdown")
+    
+    robot = robot_manager()
+    
+    # Send shutdown
+    robot.shutdown()
