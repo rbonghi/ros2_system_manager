@@ -198,7 +198,7 @@ setup(
     # Load jetson_variables
     package_data={},
     # Define research keywords
-    keywords=("ros2", "foxy", "system manager"),
+    keywords=("ros2 foxy system manager"),
     tests_require=['pytest'],
     classifiers=["Development Status :: 4 - Beta",
                  # Audiencence and topics
@@ -227,6 +227,8 @@ setup(
             ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
         ('share/' + package_name, ['requirements.txt']),
+        ('share/' + package_name, ['README.md']),
+        ('share/' + package_name, ['LICENSE']),
         ('share/' + package_name, list_services()),
         (path.join('share', package_name), glob('launch/*.py'))
         ],
@@ -236,6 +238,8 @@ setup(
               'install': PostInstallCommand},
     # The following provide a command called `ros_system_manager`
     entry_points={'console_scripts': [
-        'system_manager=ros_system_manager.__main__:main',]},
+        'system_manager_server=ros_system_manager.__main__:main',
+        'system_manager=ros_system_manager.ros_system_manager:main',
+        ]},
 )
 # EOF
