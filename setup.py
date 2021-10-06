@@ -65,7 +65,6 @@ def list_scripts():
 
 
 def list_services():
-    print("HEEEELLLOOOOOOO")
     return ["services/{file}".format(file=f) for f in os.listdir("services") if os.path.isfile(os.path.join("services", f))]
 
 
@@ -94,13 +93,21 @@ version = VERSION
 def install_services(copy):
     print(f"System prefix {sys.prefix}")
     # Make jetson stats folder
-    root = sys.prefix + f"/local/{package_name}/"
+    root = sys.prefix + f"/lib/{package_name}/"
     if not os.path.exists(root):
         os.makedirs(root)
     # Copy all files
     for f_service in list_services():
+        name_service = os.path.basename(f_service)
+        print(f"Service name: {name_service}")
         folder, _ = os.path.split(__file__)
-        path = root + os.path.basename(f_service)
+        path = root + name_service
+        # Check if service is active
+        if os.system('systemctl is-active --quiet {name_service}') == 0:
+            # Stop service
+            os.system(f"systemctl stop {name_service}")
+            # Disable ros_system_manager at startup
+            os.system(f"systemctl disable {name_service}")
         # remove if exist file
         if os.path.exists(path):
             os.remove(path)
@@ -112,7 +119,20 @@ def install_services(copy):
             type_service = "Linking"
             os.symlink(folder + "/" + f_service, path)
         # Prompt message
-        print("{type} {file} -> {path}".format(type=type_service, file=os.path.basename(f_service), path=path))
+        print(f"{type_service} {name_service} -> {path}")
+    # Reload all services
+    os.system("systemctl daemon-reload")
+    # Enable and start all services
+    for f_service in list_services():
+        name_service = os.path.basename(f_service)
+        path = root + name_service
+        # Link service
+        copyfile(path, f"/etc/systemd/system/{name_service}")
+        print(f"make {name_service} as a service")
+        # Enable ros_system_manager at startup
+        os.system(f"systemctl enable {name_service}")
+        # Start service
+        os.system(f"systemctl start {name_service}")
 
 
 def pre_installer(installer, obj, copy):
@@ -124,20 +144,8 @@ def pre_installer(installer, obj, copy):
     # Install services
     if not runningInDocker() and is_superuser():
         print("Install services")
-        # Check if service is active
-        if os.system('systemctl is-active --quiet ros_system_manager') == 0:
-            # Stop service
-            os.system("systemctl stop ros_system_manager.service")
-            # Disable ros_system_manager at startup
-            os.system("systemctl disable ros_system_manager.service")
         # Install services
-        # install_services(copy)
-        # Reload all services
-        os.system("systemctl daemon-reload")
-        # Enable ros_system_manager at startup
-        os.system("systemctl enable ros_system_manager.service")
-        # Start service
-        os.system("systemctl start ros_system_manager.service")
+        install_services(copy)
         # Create group
         try:
             grp.getgrnam(group)
