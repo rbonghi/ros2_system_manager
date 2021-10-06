@@ -29,14 +29,14 @@ import os
 import sys
 from multiprocessing import Event, AuthenticationError
 from threading import Thread
-from .service import RobotManager
-from .exceptions import RobotException
+from .service import SystemManager
+from .exceptions import SystemManagerException
 # Create logger
 logger = logging.getLogger(__name__)
 # Gain timeout lost connection
 TIMEOUT_GAIN = 3
 
-class robot_manager:    
+class system_manager:
     
     def __init__(self, interval=0.5):
         # Local Event thread
@@ -52,11 +52,11 @@ class robot_manager:
         # Stats read from service
         self._stats = {}
         # Read stats
-        RobotManager.register('get_queue')
-        RobotManager.register("sync_data")
-        RobotManager.register('sync_event')
+        SystemManager.register('get_queue')
+        SystemManager.register("sync_data")
+        SystemManager.register('sync_event')
         # Initialize broadcaster manager
-        self._broadcaster = RobotManager()
+        self._broadcaster = SystemManager()
         # Initialize connection
         self._start()
 
@@ -74,27 +74,27 @@ class robot_manager:
             self._broadcaster.connect()
         except FileNotFoundError as e:
             if e.errno == 2 or e.errno == 111:  # Message error: 'No such file or directory' or 'Connection refused'
-                raise RobotException("The robot_manager.service is not active. Please run:\nsudo systemctl restart robot_manager.service")
+                raise SystemManagerException("The robot_manager.service is not active. Please run:\nsudo systemctl restart robot_manager.service")
             elif e.errno == 13:  # Message error: 'Permission denied'
-                raise RobotException("I can't access robot_manager.service.\nPlease logout or reboot this board.")
+                raise SystemManagerException("I can't access robot_manager.service.\nPlease logout or reboot this board.")
             else:
                 raise FileNotFoundError(e)
         except ConnectionRefusedError as e:
             if e.errno == 111:  # Connection refused
                 # When server is off but socket files exists in /run
-                raise RobotException("The robot_manager.service is not active. Please run:\nsudo systemctl restart robot_manager.service")
+                raise SystemManagerException("The robot_manager.service is not active. Please run:\nsudo systemctl restart robot_manager.service")
             else:
                 raise ConnectionRefusedError(e)
         except PermissionError as e:
             if e.errno == 13:  # Permission denied
-                raise RobotException("I can't access robot_manager.service.\nPlease logout or reboot this board.")
+                raise SystemManagerException("I can't access robot_manager.service.\nPlease logout or reboot this board.")
             else:
                 raise PermissionError(e)
         except ValueError:
             # https://stackoverflow.com/questions/54277946/queue-between-python2-and-python3
-            raise RobotException("Mismatch of Python versions between library and service")
+            raise SystemManagerException("Mismatch of Python versions between library and service")
         except AuthenticationError:
-            raise RobotException("Authentication with robot_manager server failed")
+            raise SystemManagerException("Authentication with robot_manager server failed")
         # Initialize synchronized data and condition
         self._controller = self._broadcaster.get_queue()
         self._sync_data = self._broadcaster.sync_data()

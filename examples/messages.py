@@ -25,13 +25,13 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, 
 # EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from robot_docker_manager import robot_manager, RobotException
+from ros_system_manager import system_manager, SystemManagerException
 
 
 if __name__ == "__main__":
-    print("Send shutdown")
+    print("ros_system_manager - Send shutdown")
     
-    robot = robot_manager()
+    sm_robot = system_manager()
     
     # Send shutdown
-    robot.shutdown()
+    sm_robot.shutdown()

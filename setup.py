@@ -67,8 +67,8 @@ def list_services():
 
 
 here = os.path.abspath(os.path.dirname(__file__))
-project_homepage = "https://github.com/rbonghi/robot_docker_manager"
-documentation_homepage = "https://github.com/rbonghi/robot_docker_manager"
+project_homepage = "https://github.com/rbonghi/ros_system_manager"
+documentation_homepage = "https://github.com/rbonghi/ros_system_manager"
 
 with open(path.join(here, 'requirements.txt'), encoding='utf-8') as f:
     requirements = f.read().splitlines()
@@ -78,7 +78,7 @@ with open(os.path.join(here, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 # Load version package
-with open(os.path.join(here, "robot_docker_manager", "__init__.py")) as fp:
+with open(os.path.join(here, "ros_system_manager", "__init__.py")) as fp:
     VERSION = (
         re.compile(
             r""".*__version__ = ["'](.*?)['"]""", re.S).match(fp.read()).group(1)
@@ -90,7 +90,7 @@ version = VERSION
 def install_services(copy):
     print(f"System prefix {sys.prefix}")
     # Make jetson stats folder
-    root = sys.prefix + "/local/robot_manager/"
+    root = sys.prefix + "/local/ros_system_manager/"
     if not os.path.exists(root):
         os.makedirs(root)
     # Copy all files
@@ -112,20 +112,13 @@ def install_services(copy):
 
 
 def pre_installer(installer, obj, copy):
-    # Check if installing in super user
-    if not is_superuser():
-        print("----------------------------------------")
-        print("Install on your host using superuser permission, like:")
-        print("sudo -H pip install -U robot-manager")
-        sys.exit(1)
     # Install services
-    if not runningInDocker():
+    if not runningInDocker() and is_superuser():
         print("Install services")
-        robot_manager_is_active = os.system('systemctl is-active --quiet robot_manager') == 0
+        robot_manager_is_active = os.system('systemctl is-active --quiet ros_system_manager') == 0
         install_services(copy)
     # Run the default installation script
     installer.run(obj)
-
 
 class PostInstallCommand(install):
     """Installation mode."""
@@ -144,11 +137,11 @@ class PostDevelopCommand(develop):
 
 # Configuration setup module
 setup(
-    name="robot_docker_manager",
+    name="ros_system_manager",
     version=version,
     author="Raffaello Bonghi",
     author_email="raffaello@rnext.it",
-    description="robot docker manager",
+    description="ros system manager",
     license='MIT',
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -189,13 +182,13 @@ setup(
     zip_safe=False,
     # Add jetson_variables in /opt/jetson_stats
     # http://docs.python.org/3.4/distutils/setupscript.html#installing-additional-files
-    data_files=[('robot_docker_manager', list_services())],
+    data_files=[('ros_system_manager', list_services())],
     # Install extra scripts
     scripts=list_scripts(),
     cmdclass={'develop': PostDevelopCommand,
               'install': PostInstallCommand},
-    # The following provide a command called `robot_docker_manager`
+    # The following provide a command called `ros_system_manager`
     entry_points={'console_scripts': [
-        'robot_docker_manager=robot_docker_manager.__main__:main',]},
+        'system_manager=ros_system_manager.__main__:main',]},
 )
 # EOF

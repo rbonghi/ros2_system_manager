@@ -34,25 +34,25 @@ import logging
 from multiprocessing import Process, Queue, Event, Value
 from multiprocessing.managers import SyncManager
 from .common import get_key
-from .exceptions import RobotException
+from .exceptions import SystemManagerException
 # Create logger for tegrastats
 logger = logging.getLogger(__name__)
 # Pipe configuration
 # https://refspecs.linuxfoundation.org/FHS_3.0/fhs/ch05s13.html
 # https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard
-ROBOT_PIPE = '/run/robot.sock'
+ROBOT_PIPE = '/run/ros_system_manager.sock'
 ROBOT_USER = 'robot_manager'
 # Gain timeout lost connection
 TIMEOUT_GAIN = 3
 TIMEOUT_SWITCHOFF = 3.0
 
 
-class RobotManager(SyncManager):
+class SystemManager(SyncManager):
     
     def __init__(self, authkey=None):
         if authkey is None:
             authkey = get_key().encode("utf-8")
-        super(RobotManager, self).__init__(address=(ROBOT_PIPE), authkey=authkey)
+        super(SystemManager, self).__init__(address=(ROBOT_PIPE), authkey=authkey)
 
     def get_queue(self):
         pass
@@ -64,12 +64,12 @@ class RobotManager(SyncManager):
         pass
 
 
-class RobotManagerServer(Process):
+class SystemManagerServer(Process):
     def __init__(self, force=False):
         self.force = force
         # Check if running a root
         if os.getuid() != 0:
-            raise RobotException("robot_manager service need sudo to work")
+            raise SystemManagerException("ros_system_manager service need sudo to work")
         # Error queue
         self._error = Queue()
         # Command queue
@@ -81,14 +81,14 @@ class RobotManagerServer(Process):
         # Event lock
         self.event = Event()
         # Load super Thread constructor
-        super(RobotManagerServer, self).__init__()
+        super(SystemManagerServer, self).__init__()
         # Register stats
         # https://docs.python.org/2/library/multiprocessing.html#using-a-remote-manager
-        RobotManager.register('get_queue', callable=lambda: self.q)
-        RobotManager.register("sync_data", callable=lambda: self.data)
-        RobotManager.register('sync_event', callable=lambda: self.event)
+        SystemManager.register('get_queue', callable=lambda: self.q)
+        SystemManager.register("sync_data", callable=lambda: self.data)
+        SystemManager.register('sync_event', callable=lambda: self.event)
         # Generate key and open broadcaster
-        self.broadcaster = RobotManager()
+        self.broadcaster = SystemManager()
 
     def system_message(self, message):
         print(f"message: {message}")
@@ -132,19 +132,19 @@ class RobotManagerServer(Process):
             gid = getgrnam(ROBOT_USER).gr_gid
         except KeyError:
             # User does not exist
-            raise RobotException("Group {jtop_user} does not exist!".format(jtop_user=ROBOT_USER))
+            raise SystemManagerException("Group {jtop_user} does not exist!".format(jtop_user=ROBOT_USER))
         # Remove old pipes if exists
         if os.path.exists(ROBOT_PIPE):
             if self.force:
                 logger.info("Remove pipe {pipe}".format(pipe=ROBOT_PIPE))
                 os.remove(ROBOT_PIPE)
             else:
-                raise RobotException("Service already active! Please check before run it again")
+                raise SystemManagerException("Service already active! Please check before run it again")
         # Start broadcaster
         try:
             self.broadcaster.start()
         except EOFError:
-            raise RobotException("Server already alive")
+            raise SystemManagerException("Server already alive")
         # Initialize synchronized data and conditional
         self.sync_data = self.broadcaster.sync_data()
         self.sync_event = self.broadcaster.sync_event()
@@ -155,12 +155,12 @@ class RobotManagerServer(Process):
         # Equivalent permission 660 srw-rw----
         os.chmod(ROBOT_PIPE, stat.S_IREAD | stat.S_IWRITE | stat.S_IWGRP | stat.S_IRGRP)
         # Run the Control server
-        super(RobotManagerServer, self).start()
+        super(SystemManagerServer, self).start()
 
     def loop_for_ever(self):
         try:
             self.start()
-        except RobotException as e:
+        except SystemManagerException as e:
             logger.error(e)
             return
         # Join main subprocess

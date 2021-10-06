@@ -24,14 +24,19 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, 
 # EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# flake8: noqa
 
-from .robot_manager import robot_manager
-from .exceptions import RobotException
+class SystemManagerException(Exception):
+    """ Robot manager general exception """
 
-__author__ = "Raffaello Bonghi"
-__email__ = "raffaello@rnext.it"
-# Version package
-# https://packaging.python.org/guides/distributing-packages-using-setuptools/#choosing-a-versioning-scheme
-__version__ = "0.1.0"
+    def __init__(self, message, errors=""):
+        super(SystemManagerException, self).__init__(message, errors)
+        # Now for your custom code...
+        self.message = message
+        self.errors = errors
+
+    def __repr__(self):
+        return str(self.message)
+
+    def __str__(self):
+        return str(self.message)
 # EOF
