@@ -34,6 +34,7 @@ import os
 import sys
 import re
 import logging
+import grp
 from glob import glob
 
 logging.basicConfig(stream=sys.stderr, level=logging.INFO)
@@ -64,6 +65,7 @@ def list_scripts():
 
 
 def list_services():
+    print("HEEEELLLOOOOOOO")
     return ["services/{file}".format(file=f) for f in os.listdir("services") if os.path.isfile(os.path.join("services", f))]
 
 
@@ -136,6 +138,12 @@ def pre_installer(installer, obj, copy):
         os.system("systemctl enable ros_system_manager.service")
         # Start service
         os.system("systemctl start ros_system_manager.service")
+        # Create group
+        try:
+            grp.getgrnam(group)
+        except KeyError:
+            print(f'Group {group} does not exist.') 
+            os.system(f"groupadd {group}")
         # Add system_manager to group
         os.system(f"usermod -a -G {group} {user}")
     # Run the default installation script
