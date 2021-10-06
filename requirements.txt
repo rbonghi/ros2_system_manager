@@ -1,2 +1,2 @@
-jetson-stats
+setuptools
 docker-compose

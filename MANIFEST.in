@@ -19,16 +19,16 @@ include *.md
 
 # Include the license file
 include LICENSE
+include package.xml
 
 # Include the data files
 recursive-include scripts *
 
 # Include services files
 recursive-include services *.service
-recursive-include services *.sh
 
 # Remove test docs and examples and tox.ini
 exclude tox.it
-prune tests
+prune test
 prune docs
 prune examples

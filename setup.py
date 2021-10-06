@@ -34,6 +34,7 @@ import os
 import sys
 import re
 import logging
+from glob import glob
 
 logging.basicConfig(stream=sys.stderr, level=logging.INFO)
 log = logging.getLogger()
@@ -66,6 +67,7 @@ def list_services():
     return ["services/{file}".format(file=f) for f in os.listdir("services") if os.path.isfile(os.path.join("services", f))]
 
 
+package_name = 'ros_system_manager'
 here = os.path.abspath(os.path.dirname(__file__))
 project_homepage = "https://github.com/rbonghi/ros_system_manager"
 documentation_homepage = "https://github.com/rbonghi/ros_system_manager"
@@ -78,7 +80,7 @@ with open(os.path.join(here, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
 # Load version package
-with open(os.path.join(here, "ros_system_manager", "__init__.py")) as fp:
+with open(os.path.join(here, package_name, "__init__.py")) as fp:
     VERSION = (
         re.compile(
             r""".*__version__ = ["'](.*?)['"]""", re.S).match(fp.read()).group(1)
@@ -90,7 +92,7 @@ version = VERSION
 def install_services(copy):
     print(f"System prefix {sys.prefix}")
     # Make jetson stats folder
-    root = sys.prefix + "/local/ros_system_manager/"
+    root = sys.prefix + f"/local/{package_name}/"
     if not os.path.exists(root):
         os.makedirs(root)
     # Copy all files
@@ -112,11 +114,30 @@ def install_services(copy):
 
 
 def pre_installer(installer, obj, copy):
+    group = 'system_manager'
+    # Get user
+    user = os.getenv("SUDO_USER", os.getenv("USER"))
+    if user is None:
+        user = os.getenv("USER")
     # Install services
     if not runningInDocker() and is_superuser():
         print("Install services")
-        robot_manager_is_active = os.system('systemctl is-active --quiet ros_system_manager') == 0
-        install_services(copy)
+        # Check if service is active
+        if os.system('systemctl is-active --quiet ros_system_manager') == 0:
+            # Stop service
+            os.system("systemctl stop ros_system_manager.service")
+            # Disable ros_system_manager at startup
+            os.system("systemctl disable ros_system_manager.service")
+        # Install services
+        # install_services(copy)
+        # Reload all services
+        os.system("systemctl daemon-reload")
+        # Enable ros_system_manager at startup
+        os.system("systemctl enable ros_system_manager.service")
+        # Start service
+        os.system("systemctl start ros_system_manager.service")
+        # Add system_manager to group
+        os.system(f"usermod -a -G {group} {user}")
     # Run the default installation script
     installer.run(obj)
 
@@ -137,10 +158,12 @@ class PostDevelopCommand(develop):
 
 # Configuration setup module
 setup(
-    name="ros_system_manager",
+    name=package_name,
     version=version,
     author="Raffaello Bonghi",
     author_email="raffaello@rnext.it",
+    maintainer='Raffaello Bonghi',
+    maintainer_email='raffaello@rnext.it',
     description="ros system manager",
     license='MIT',
     long_description=long_description,
@@ -159,7 +182,8 @@ setup(
     # Load jetson_variables
     package_data={},
     # Define research keywords
-    keywords=(),
+    keywords=("ros2", "foxy", "system manager"),
+    tests_require=['pytest'],
     classifiers=["Development Status :: 4 - Beta",
                  # Audiencence and topics
                  "Intended Audience :: Developers",
@@ -179,10 +203,17 @@ setup(
     platforms=["linux", "linux2", "darwin"],
     # Zip safe configuration
     # https://setuptools.readthedocs.io/en/latest/setuptools.html#setting-the-zip-safe-flag
-    zip_safe=False,
+    zip_safe=True,
     # Add jetson_variables in /opt/jetson_stats
     # http://docs.python.org/3.4/distutils/setupscript.html#installing-additional-files
-    data_files=[('ros_system_manager', list_services())],
+    data_files=[
+        ('share/ament_index/resource_index/packages',
+            ['resource/' + package_name]),
+        ('share/' + package_name, ['package.xml']),
+        ('share/' + package_name, ['requirements.txt']),
+        ('share/' + package_name, list_services()),
+        (path.join('share', package_name), glob('launch/*.py'))
+        ],
     # Install extra scripts
     scripts=list_scripts(),
     cmdclass={'develop': PostDevelopCommand,
