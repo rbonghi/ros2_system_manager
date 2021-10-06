@@ -29,6 +29,7 @@ import re
 import logging
 from .common import get_var
 from .service import SystemManagerServer
+from .exceptions import SystemManagerException
 # Create logger
 logger = logging.getLogger(__name__)
 # Version match
@@ -44,10 +45,13 @@ def main():
     parser.add_argument('-v', '--version', action='version', version='%(prog)s {version}'.format(version=get_var(VERSION_RE)))
     # Parse arguments
     args = parser.parse_args()
-    # Initialize stats server
-    server = SystemManagerServer(force=args.force)
-    logger.info("robot_manager server loaded")
-    server.loop_for_ever()
+    try:
+        # Initialize system manager server
+        server = SystemManagerServer(force=args.force)
+        logger.info("robot_manager server loaded")
+        server.loop_for_ever()
+    except SystemManagerException as e:
+        print(e)
 
 if __name__ == "__main__":
     main()

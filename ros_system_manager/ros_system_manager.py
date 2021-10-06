@@ -27,6 +27,7 @@
 import rclpy
 from rclpy.node import Node
 from .system_manager import system_manager
+from .exceptions import SystemManagerException
 
 class system_manager_wrapper(Node):
     
@@ -41,13 +42,16 @@ class system_manager_wrapper(Node):
 def main(args=None):
     rclpy.init(args=args)
     # Start Nanosaur
-    wrapper = system_manager_wrapper()
     try:
-        rclpy.spin(wrapper)
-    except (KeyboardInterrupt, SystemExit):
-        pass
-    # Destroy the node explicitly
-    wrapper.destroy_node()
+        wrapper = system_manager_wrapper()
+        try:
+            rclpy.spin(wrapper)
+        except (KeyboardInterrupt, SystemExit):
+            pass
+        # Destroy the node explicitly
+        wrapper.destroy_node()
+    except SystemManagerException as e:
+        print(e)
     rclpy.shutdown()
 
 
