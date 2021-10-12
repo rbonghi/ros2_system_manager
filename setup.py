@@ -176,7 +176,7 @@ setup(
     maintainer='Raffaello Bonghi',
     maintainer_email='raffaello@rnext.it',
     description='ros system manager',
-    license='MIT',
+    license='GPLv3',
     long_description=long_description,
     long_description_content_type='text/markdown',
     url=project_homepage,
