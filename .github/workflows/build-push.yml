@@ -22,9 +22,9 @@ jobs:
         # Make group ros2sm
         sudo groupadd ros2sm
         # Upgrade pip
-        sudo -H python3 -m pip3 install --upgrade pip
+        sudo -H python3 -m pip install --upgrade pip
         # Upgrade documentation
-        sudo -H python3 -m pip3 install --upgrade pydocstyle
+        sudo -H python3 -m pip install --upgrade pydocstyle
     - name: Display Python version
       run: python3 -c "import sys; print(sys.version)"
     - name: Colcon test
