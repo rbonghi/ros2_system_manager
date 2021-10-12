@@ -25,18 +25,16 @@
 # EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import grp
+import logging
 import os
 import re
-import logging
 import sys
-
 # Always prefer setuptools over distutils
 from glob import glob
-
-from setuptools import find_packages, setup
 from os import path
 from shutil import copyfile
 
+from setuptools import find_packages, setup
 from setuptools.command.develop import develop
 from setuptools.command.install import install
 
