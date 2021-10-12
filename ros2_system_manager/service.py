@@ -17,14 +17,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 
+from grp import getgrnam
+from multiprocessing import Event, Process, Queue, Value
+from multiprocessing.managers import SyncManager
+
 import logging
 import os
 import queue
 import stat
 import sys
-from grp import getgrnam
-from multiprocessing import Event, Process, Queue, Value
-from multiprocessing.managers import SyncManager
 
 from .common import get_key
 from .exceptions import SystemManagerException

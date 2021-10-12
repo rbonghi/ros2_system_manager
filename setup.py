@@ -18,15 +18,15 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 
+# Always prefer setuptools over distutils
+from glob import glob
+from os import path
+from shutil import copyfile
 import grp
 import logging
 import os
 import re
-# Always prefer setuptools over distutils
-from glob import glob
 import sys
-from os import path
-from shutil import copyfile
 
 from setuptools import find_packages, setup
 from setuptools.command.develop import develop
