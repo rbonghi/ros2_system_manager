@@ -47,6 +47,9 @@ def runningInDocker():
     """Function to detect is is installing this package in a docker container.
     * https://gist.github.com/anantkamath/623ce7f5432680749e087cf8cfba9b69
     * https://stackoverflow.com/questions/23513045/how-to-check-if-a-process-is-running-inside-docker-container
+
+    Returns:
+        bool: True if is running in a docker container
     """
     with open('/proc/self/cgroup', 'r') as procfile:
         for line in procfile:
@@ -162,14 +165,12 @@ def pre_installer(installer, obj, copy):
 
 
 class PostInstallCommand(install):
-    """Installation mode."""
     def run(self):
         # Run the uninstaller before to copy all scripts
         pre_installer(install, self, True)
 
 
 class PostDevelopCommand(develop):
-    """Post-installation for development mode."""
     def run(self):
         # Run the uninstaller before to copy all scripts
         # Install services (linking)
