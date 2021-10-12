@@ -26,8 +26,9 @@
 import rclpy
 from rclpy.node import Node
 from std_srvs.srv import Empty
-from .system_manager import system_manager
+
 from .exceptions import SystemManagerException
+from .system_manager import system_manager
 
 
 class system_manager_wrapper(Node):
@@ -39,16 +40,16 @@ class system_manager_wrapper(Node):
         self.srv = self.create_service(Empty, 'shutdown', self.shutdown)
         self.srv = self.create_service(Empty, 'reboot', self.reboot)
         # Node started
-        self.get_logger().info("Hello system_manager!")
+        self.get_logger().info('Hello system_manager!')
 
     def shutdown(self, request, response):
-        self.get_logger().info(f"System shutdown")
+        self.get_logger().info(f'System shutdown')
         # Run shutdown command
         self.system_manager.shutdown()
         return response
 
     def reboot(self, request, response):
-        self.get_logger().info(f"System reboot")
+        self.get_logger().info(f'System reboot')
         # Run reboot command
         self.system_manager.reboot()
         return response

@@ -24,17 +24,17 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
 # EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-
+import os
+import grp
+import re
+import sys
+import logging
 # Always prefer setuptools over distutils
 from setuptools import find_packages, setup
-import os
-import sys
-import re
-import grp
-import logging
-from os import path
 from glob import glob
+from os import path
 from shutil import copyfile
+
 from setuptools.command.develop import develop
 from setuptools.command.install import install
 
@@ -45,8 +45,9 @@ log = logging.getLogger()
 
 def runningInDocker():
     """
-    https://gist.github.com/anantkamath/623ce7f5432680749e087cf8cfba9b69
-    https://stackoverflow.com/questions/23513045/how-to-check-if-a-process-is-running-inside-docker-container
+    
+    * https://gist.github.com/anantkamath/623ce7f5432680749e087cf8cfba9b69
+    * https://stackoverflow.com/questions/23513045/how-to-check-if-a-process-is-running-inside-docker-container
     """
     with open('/proc/self/cgroup', 'r') as procfile:
         for line in procfile:

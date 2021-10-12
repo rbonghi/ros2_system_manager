@@ -24,11 +24,12 @@
 # EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import argparse
-import re
 import logging
+import re
+
 from .common import get_var
-from .service import SystemManagerServer
 from .exceptions import SystemManagerException
+from .service import SystemManagerServer
 # Create logger
 logger = logging.getLogger(__name__)
 # Version match
@@ -43,7 +44,7 @@ def main():
     parser.add_argument('--force',
                         dest='force',
                         help=argparse.SUPPRESS,
-                        action="store_true",
+                        action='store_true',
                         default=False)
     parser.add_argument('-v', '--version',
                         action='version',
@@ -53,13 +54,13 @@ def main():
     try:
         # Initialize system manager server
         server = SystemManagerServer(force=args.force)
-        logger.info("robot_manager server loaded")
-        print("ROS2 system manager running")
+        logger.info('robot_manager server loaded')
+        print('ROS2 system manager running')
         server.loop_for_ever()
     except SystemManagerException as e:
         print(e)
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     main()
 # EOF

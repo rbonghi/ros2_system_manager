@@ -23,13 +23,13 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
 # EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import queue
 import os
-import sys
+import queue
 from grp import getgrnam
-import stat
-# Logging
+import sys
 import logging
+import stat
+
 from multiprocessing import Event, Process, Queue, Value
 from multiprocessing.managers import SyncManager
 

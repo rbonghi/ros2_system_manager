@@ -14,7 +14,7 @@
 #    from this software without specific prior written permission.
 #
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
-# CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING,
+# CONTRIBUTORS "AS IS' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING,
 # BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
 # FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
 # HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
@@ -28,8 +28,8 @@
 from ros2_system_manager import system_manager, SystemManagerException
 
 
-if __name__ == "__main__":
-    print("ros2_system_manager - Send shutdown")
+if __name__ == '__main__':
+    print('ros2_system_manager - Send shutdown')
 
     try:
         sm_robot = system_manager()

@@ -24,9 +24,10 @@
 # EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import logging
-from multiprocessing import Event, AuthenticationError
-from .service import SystemManager
+from multiprocessing import AuthenticationError, Event
+
 from .exceptions import SystemManagerException
+from .service import SystemManager
 # Create logger
 logger = logging.getLogger(__name__)
 # Gain timeout lost connection
@@ -50,7 +51,7 @@ class system_manager:
         self._stats = {}
         # Read stats
         SystemManager.register('get_queue')
-        SystemManager.register("sync_data")
+        SystemManager.register('sync_data')
         SystemManager.register('sync_event')
         # Initialize broadcaster manager
         self._broadcaster = SystemManager()
@@ -72,31 +73,31 @@ class system_manager:
         except FileNotFoundError as e:
             # Message error: 'No such file or directory' or 'Connection refused'
             if e.errno == 2 or e.errno == 111:
-                raise SystemManagerException("The robot_manager.service is not active. \
-                    Please run:\nsudo systemctl restart robot_manager.service")
+                raise SystemManagerException('The robot_manager.service is not active. \
+                    Please run:\nsudo systemctl restart robot_manager.service')
             elif e.errno == 13:  # Message error: 'Permission denied'
-                raise SystemManagerException("I can't access ros2_system_manager.service.\
-                    \nPlease logout or reboot this board.")
+                raise SystemManagerException('I cannot access ros2_system_manager.service.\
+                    \nPlease logout or reboot this board.')
             else:
                 raise FileNotFoundError(e)
         except ConnectionRefusedError as e:
             if e.errno == 111:  # Connection refused
                 # When server is off but socket files exists in /run
-                raise SystemManagerException("The ros2_system_manager.service is not active. \
-                    Please run:\nsudo systemctl restart ros2_system_manager.service")
+                raise SystemManagerException('The ros2_system_manager.service is not active. \
+                    Please run:\nsudo systemctl restart ros2_system_manager.service')
             else:
                 raise ConnectionRefusedError(e)
         except PermissionError as e:
             if e.errno == 13:  # Permission denied
-                raise SystemManagerException("I can't access ros2_system_manager.service.\
-                    \nPlease logout or reboot this board.")
+                raise SystemManagerException('I cannot access ros2_system_manager.service.\
+                    \nPlease logout or reboot this board.')
             else:
                 raise PermissionError(e)
         except ValueError:
             # https://stackoverflow.com/questions/54277946/queue-between-python2-and-python3
-            raise SystemManagerException("Mismatch of Python versions between library and service")
+            raise SystemManagerException('Mismatch of Python versions between library and service')
         except AuthenticationError:
-            raise SystemManagerException("Authentication with ros2_system_manager server failed")
+            raise SystemManagerException('Authentication with ros2_system_manager server failed')
         # Initialize synchronized data and condition
         self._controller = self._broadcaster.get_queue()
         self._sync_data = self._broadcaster.sync_data()

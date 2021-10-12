@@ -24,12 +24,11 @@
 # EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import os
-import re
-from random import choice
 from base64 import b64encode
-from string import ascii_letters
-# Logging
+from random import choice
+import re
 import logging
+from string import ascii_letters
 # Load Author
 AUTH_RE = re.compile(r""".*__author__ = ["'](.*?)['"]""", re.S)
 # Create logger
@@ -38,7 +37,7 @@ logger = logging.getLogger(__name__)
 
 def get_var(MATCH_RE):
     """
-    Show the version of this package
+    Show the version of this package.
     :return: Version number
     :rtype: string
     """
