@@ -22,9 +22,9 @@ import grp
 import logging
 import os
 import re
-import sys
 # Always prefer setuptools over distutils
 from glob import glob
+import sys
 from os import path
 from shutil import copyfile
 
@@ -158,12 +158,14 @@ def pre_installer(installer, obj, copy):
 
 
 class PostInstallCommand(install):
+
     def run(self):
         # Run the uninstaller before to copy all scripts
         pre_installer(install, self, True)
 
 
 class PostDevelopCommand(develop):
+
     def run(self):
         # Run the uninstaller before to copy all scripts
         # Install services (linking)

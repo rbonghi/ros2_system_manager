@@ -1,3 +1,3 @@
 Any contribution that you make to this repository will
-be under the GNU General Public License 3.0 license, as dictated by that
+be under the GNU General Public License 3.0 , as dictated by that
 [license](https://opensource.org/licenses/GPL-3.0).

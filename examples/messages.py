@@ -19,7 +19,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-from ros2_system_manager import SystemManagerException, system_manager
+from ros2_system_manager import system_manager, SystemManagerException
 
 
 if __name__ == '__main__':

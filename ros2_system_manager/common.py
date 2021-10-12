@@ -19,8 +19,8 @@
 
 import logging
 import os
-import re
 from base64 import b64encode
+import re
 from random import choice
 from string import ascii_letters
 # Load Author
