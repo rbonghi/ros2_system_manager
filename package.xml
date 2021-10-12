@@ -22,7 +22,7 @@ along with this program. If not, see <https://www.gnu.org/licenses/>.
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
    <name>ros2_system_manager</name>
-   <version>0.1.0</version>
+   <version>0.1.1</version>
    <description>ros system manager</description>
    <author email="raffaello@rnext.it">Raffaello Bonghi</author>
    <maintainer email="raffaello@rnext.it">Raffaello Bonghi</maintainer>

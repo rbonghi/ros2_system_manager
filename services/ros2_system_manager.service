@@ -22,7 +22,7 @@ Description=ros2_system_manager service
 
 [Service]
 # Type=exec
-ExecStart=/usr/lib/ros2_system_manager/system_manager
+ExecStart=/usr/lib/ros2_system_manager/system_manager_server
 Restart=on-failure
 RestartSec=10s
 TimeoutStartSec=30s

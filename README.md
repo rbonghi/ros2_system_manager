@@ -34,3 +34,10 @@ docker build -t rbonghi/ros2_system_manager:latest .
 ```
 docker run -it --rm --network host -v /run/ros2sm.sock:/run/ros2sm.sock -v $HOME/ros2_system_manager:/opt/ros_ws/src/ros2_system_manager rbonghi/ros2_system_manager:latest bash
 ```
+
+# Test
+
+To run a test
+```
+colcon test --event-handlers console_cohesion+ --return-code-on-test-failure --packages-select ros2_system_manager
+```
