@@ -27,6 +27,9 @@ jobs:
         sudo -H python3 -m pip install --upgrade pydocstyle
     - name: Display Python version
       run: python3 -c "import sys; print(sys.version)"
+    - uses: ros-tooling/setup-ros@v0.2
+      with:
+        required-ros-distributions: foxy
     - uses: ros-tooling/action-ros-ci@v0.2
       with:
         package-name: ros2_system_manager
