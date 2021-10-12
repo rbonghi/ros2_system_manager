@@ -29,6 +29,10 @@ jobs:
         sudo apt-get install python3-colcon-common-extensions
     - name: Display Python version
       run: python3 -c "import sys; print(sys.version)"
+    - uses: ros-tooling/action-ros-ci@v0.2
+      with:
+        package-name: ros2_system_manager
+        target-ros2-distro: foxy
     - name: Colcon test
       run: |
         colcon test
