@@ -1,3 +1,4 @@
+# -*- coding: UTF-8 -*-
 # Copyright (C) 2021, Raffaello Bonghi <raffaello@rnext.it>
 # All rights reserved
 # Redistribution and use in source and binary forms, with or without
@@ -23,16 +24,38 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, 
 # EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-[Unit]
-Description=ros_system_manager service
+import rclpy
+from rclpy.node import Node
+#from ros2_system_manager import 
+from .system_manager import system_manager
+from .exceptions import SystemManagerException
 
-[Service]
-# Type=exec
-ExecStart=/usr/lib/ros_system_manager/system_manager
-Restart=on-failure
-RestartSec=10s
-TimeoutStartSec=30s
-TimeoutStopSec=30s
+class system_manager_wrapper(Node):
+    
+    def __init__(self):
+        super().__init__('system_manager')
+        self.system_manager = system_manager()
+        # Node started
+        self.get_logger().info("Hello system_manager!")
+        # Test shutdown service from ROS2
+        self.system_manager.shutdown()
 
-[Install]
-WantedBy=multi-user.target
+def main(args=None):
+    rclpy.init(args=args)
+    # Start Nanosaur
+    try:
+        wrapper = system_manager_wrapper()
+        try:
+            rclpy.spin(wrapper)
+        except (KeyboardInterrupt, SystemExit):
+            pass
+        # Destroy the node explicitly
+        wrapper.destroy_node()
+    except SystemManagerException as e:
+        print(e)
+    rclpy.shutdown()
+
+
+if __name__ == '__main__':
+    main()
+# EOF

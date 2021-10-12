@@ -68,10 +68,10 @@ def list_services():
     return ["services/{file}".format(file=f) for f in os.listdir("services") if os.path.isfile(os.path.join("services", f))]
 
 
-package_name = 'ros_system_manager'
+package_name = 'ros2_system_manager'
 here = os.path.abspath(os.path.dirname(__file__))
-project_homepage = "https://github.com/rbonghi/ros_system_manager"
-documentation_homepage = "https://github.com/rbonghi/ros_system_manager"
+project_homepage = "https://github.com/rbonghi/ros2_system_manager"
+documentation_homepage = "https://github.com/rbonghi/ros2_system_manager"
 
 with open(path.join(here, 'requirements.txt'), encoding='utf-8') as f:
     requirements = f.read().splitlines()
@@ -106,7 +106,7 @@ def install_services(copy):
         if os.system('systemctl is-active --quiet {name_service}') == 0:
             # Stop service
             os.system(f"systemctl stop {name_service}")
-            # Disable ros_system_manager at startup
+            # Disable ros2_system_manager at startup
             os.system(f"systemctl disable {name_service}")
         # remove if exist file
         if os.path.exists(path):
@@ -129,7 +129,7 @@ def install_services(copy):
         # Link service
         copyfile(path, f"/etc/systemd/system/{name_service}")
         print(f"make {name_service} as a service")
-        # Enable ros_system_manager at startup
+        # Enable ros2_system_manager at startup
         os.system(f"systemctl enable {name_service}")
         # Start service
         os.system(f"systemctl start {name_service}")
@@ -236,10 +236,10 @@ setup(
     scripts=list_scripts(),
     cmdclass={'develop': PostDevelopCommand,
               'install': PostInstallCommand},
-    # The following provide a command called `ros_system_manager`
+    # The following provide a command called `ros2_system_manager`
     entry_points={'console_scripts': [
-        'system_manager_server=ros_system_manager.__main__:main',
-        'system_manager=ros_system_manager.ros_system_manager:main',
+        'system_manager_server=ros2_system_manager.__main__:main',
+        'system_manager=ros2_system_manager.ros2_system_manager:main',
         ]},
 )
 # EOF

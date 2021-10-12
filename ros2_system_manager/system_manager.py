@@ -76,25 +76,25 @@ class system_manager:
             if e.errno == 2 or e.errno == 111:  # Message error: 'No such file or directory' or 'Connection refused'
                 raise SystemManagerException("The robot_manager.service is not active. Please run:\nsudo systemctl restart robot_manager.service")
             elif e.errno == 13:  # Message error: 'Permission denied'
-                raise SystemManagerException("I can't access ros_system_manager.service.\nPlease logout or reboot this board.")
+                raise SystemManagerException("I can't access ros2_system_manager.service.\nPlease logout or reboot this board.")
             else:
                 raise FileNotFoundError(e)
         except ConnectionRefusedError as e:
             if e.errno == 111:  # Connection refused
                 # When server is off but socket files exists in /run
-                raise SystemManagerException("The ros_system_manager.service is not active. Please run:\nsudo systemctl restart ros_system_manager.service")
+                raise SystemManagerException("The ros2_system_manager.service is not active. Please run:\nsudo systemctl restart ros2_system_manager.service")
             else:
                 raise ConnectionRefusedError(e)
         except PermissionError as e:
             if e.errno == 13:  # Permission denied
-                raise SystemManagerException("I can't access ros_system_manager.service.\nPlease logout or reboot this board.")
+                raise SystemManagerException("I can't access ros2_system_manager.service.\nPlease logout or reboot this board.")
             else:
                 raise PermissionError(e)
         except ValueError:
             # https://stackoverflow.com/questions/54277946/queue-between-python2-and-python3
             raise SystemManagerException("Mismatch of Python versions between library and service")
         except AuthenticationError:
-            raise SystemManagerException("Authentication with ros_system_manager server failed")
+            raise SystemManagerException("Authentication with ros2_system_manager server failed")
         # Initialize synchronized data and condition
         self._controller = self._broadcaster.get_queue()
         self._sync_data = self._broadcaster.sync_data()

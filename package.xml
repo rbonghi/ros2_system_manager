@@ -27,16 +27,16 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-   <name>ros_system_manager</name>
+   <name>ros2_system_manager</name>
    <version>0.1.0</version>
    <description>ros system manager</description>
    <author email="raffaello@rnext.it">Raffaello Bonghi</author>
    <maintainer email="raffaello@rnext.it">Raffaello Bonghi</maintainer>
    <license>MIT</license>
 
-   <url type="website">https://github.com/rbonghi/ros_system_manager</url>
-   <url type="repository">https://github.com/rbonghi/ros_system_manager</url>
-   <url type="bugtracker">https://github.com/rbonghi/ros_system_manager/issues</url>
+   <url type="website">https://github.com/rbonghi/ros2_system_manager</url>
+   <url type="repository">https://github.com/rbonghi/ros2_system_manager</url>
+   <url type="bugtracker">https://github.com/rbonghi/ros2_system_manager/issues</url>
 
    <test_depend>ament_copyright</test_depend>
    <test_depend>ament_flake8</test_depend>
@@ -45,6 +45,7 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
    <exec_depend>rclpy</exec_depend>
    <exec_depend>std_msgs</exec_depend>
+   <exec_depend>diagnostic_msgs</exec_depend>
 
    <export>
       <build_type>ament_python</build_type>

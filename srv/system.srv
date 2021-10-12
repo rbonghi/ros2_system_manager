@@ -1,0 +1,5 @@
+# System status control
+
+string status
+---
+bool done

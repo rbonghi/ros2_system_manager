@@ -40,7 +40,7 @@ logger = logging.getLogger(__name__)
 # Pipe configuration
 # https://refspecs.linuxfoundation.org/FHS_3.0/fhs/ch05s13.html
 # https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard
-ROBOT_PIPE = '/run/ros_system_manager.sock'
+ROBOT_PIPE = '/run/ros2sm.sock'
 ROBOT_USER = 'system_manager'
 # Gain timeout lost connection
 TIMEOUT_GAIN = 3
@@ -69,7 +69,7 @@ class SystemManagerServer(Process):
         self.force = force
         # Check if running a root
         if os.getuid() != 0:
-            raise SystemManagerException("ros_system_manager service need sudo to work")
+            raise SystemManagerException("ros2_system_manager service need sudo to work")
         # Error queue
         self._error = Queue()
         # Command queue

@@ -25,11 +25,11 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, 
 # EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from ros_system_manager import system_manager, SystemManagerException
+from ros2_system_manager import system_manager, SystemManagerException
 
 
 if __name__ == "__main__":
-    print("ros_system_manager - Send shutdown")
+    print("ros2_system_manager - Send shutdown")
     
     sm_robot = system_manager()
     

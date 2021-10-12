@@ -16,6 +16,12 @@ Install in dev mode the package
 sudo -H pip3 install -v -e .
 ```
 
+## Build ros2 package
+
+```
+colcon build --symlink-install
+```
+
 ## Docker
 
 You can test the docker image build the image

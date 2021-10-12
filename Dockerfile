@@ -30,7 +30,7 @@ ENV ROS_WS /opt/ros_ws
 RUN mkdir -p $ROS_WS/src
 WORKDIR $ROS_WS
 
-ADD . $ROS_WS/src/ros_system_manager
+ADD . $ROS_WS/src/ros2_system_manager
 
 # Load ROS2 sources
 RUN . /opt/ros/$ROS_DISTRO/setup.sh && \
@@ -45,4 +45,4 @@ RUN sed --in-place --expression \
       /ros_entrypoint.sh
 
 # run ros package launch file
-CMD ["ros2", "run", "ros_system_manager", "system_manager"]
+CMD ["ros2", "run", "ros2_system_manager", "system_manager"]
