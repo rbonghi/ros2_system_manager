@@ -44,7 +44,7 @@ EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
    <test_depend>python3-pytest</test_depend>
 
    <exec_depend>rclpy</exec_depend>
-   <exec_depend>std_msgs</exec_depend>
+   <exec_depend>std_srvs</exec_depend>
    <exec_depend>diagnostic_msgs</exec_depend>
 
    <export>

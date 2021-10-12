@@ -91,7 +91,14 @@ class SystemManagerServer(Process):
         self.broadcaster = SystemManager()
 
     def system_message(self, message):
-        print(f"message: {message}")
+        if 'shutdown' in message:
+            print(f"Run shutdown system")
+            os.system(f"shutdown -h now")
+        elif 'reboot' in message:
+            print(f"Run reboot system")
+            os.system(f"reboot")
+        else:
+            print(f"Error message: {message}")
 
     def run(self):
         # Initialize variables

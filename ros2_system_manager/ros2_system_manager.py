@@ -26,7 +26,7 @@
 
 import rclpy
 from rclpy.node import Node
-#from ros2_system_manager import 
+from std_srvs.srv import Empty
 from .system_manager import system_manager
 from .exceptions import SystemManagerException
 
@@ -35,10 +35,23 @@ class system_manager_wrapper(Node):
     def __init__(self):
         super().__init__('system_manager')
         self.system_manager = system_manager()
+        # Initialize services
+        self.srv = self.create_service(Empty, 'shutdown', self.shutdown)
+        self.srv = self.create_service(Empty, 'reboot', self.reboot)
         # Node started
         self.get_logger().info("Hello system_manager!")
-        # Test shutdown service from ROS2
+
+    def shutdown(self, request, response):
+        self.get_logger().info(f"System shutdown")
+        # Run shutdown command
         self.system_manager.shutdown()
+        return response
+    
+    def reboot(self, request, response):
+        self.get_logger().info(f"System reboot")
+        # Run reboot command
+        self.system_manager.reboot()
+        return response
 
 def main(args=None):
     rclpy.init(args=args)

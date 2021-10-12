@@ -5,7 +5,7 @@ Make available in docker shutdown and other system commands directly from ROS2 s
 
 # Test manager
 ```
-docker run -it --rm -v /run/ros2sm.sock:/run/ros2sm.sock rbonghi/ros2_system_manager:latest
+docker run -it --rm --network host -v /run/ros2sm.sock:/run/ros2sm.sock rbonghi/ros2_system_manager:latest
 ```
 
 # Develop
@@ -22,10 +22,15 @@ sudo -H pip3 install -v -e .
 colcon build --symlink-install
 ```
 
-## Docker
+## Build docker
 
 You can test the docker image build the image
 
 ```
 docker build -t rbonghi/ros2_system_manager:latest .
+```
+
+## Develop
+```
+docker run -it --rm --network host -v /run/ros2sm.sock:/run/ros2sm.sock -v $HOME/ros2_system_manager:/opt/ros_ws/src/ros2_system_manager rbonghi/ros2_system_manager:latest bash
 ```

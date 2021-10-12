@@ -49,6 +49,7 @@ def main():
         # Initialize system manager server
         server = SystemManagerServer(force=args.force)
         logger.info("robot_manager server loaded")
+        print("ROS2 system manager running")
         server.loop_for_ever()
     except SystemManagerException as e:
         print(e)
