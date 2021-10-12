@@ -38,11 +38,12 @@ log = logging.getLogger()
 
 
 def runningInDocker():
-    """Function to detect is is installing this package in a docker container.
+    """Detect this package is installed in a docker container.
+
     * https://gist.github.com/anantkamath/623ce7f5432680749e087cf8cfba9b69
     * https://stackoverflow.com/questions/23513045/how-to-check-if-a-process-is-running-inside-docker-container
 
-    Returns:
+    Returns
         bool: True if is running in a docker container
     """
     with open('/proc/self/cgroup', 'r') as procfile:
