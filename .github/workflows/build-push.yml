@@ -12,23 +12,28 @@ jobs:
     name: Test package ROS2
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Install ros2_system_manager extra dependencies
-      run: |
-        # Display Python version
-        python3 -c "import sys; print(sys.version)"
-        # Make group ros2sm
-        sudo groupadd ros2sm
-        # Upgrade documentation
-        sudo -H python3 -m pip install --upgrade pydocstyle
-    # https://github.com/ros-tooling/action-ros-ci
-    - uses: ros-tooling/setup-ros@v0.2
-      with:
-        required-ros-distributions: foxy
-    - uses: ros-tooling/action-ros-ci@v0.2
-      with:
-        package-name: ros2_system_manager
-        target-ros2-distro: foxy
+      - name: setup directories
+        run: mkdir -p ros_ws/src
+      - name: checkout
+        uses: actions/checkout@v2
+        with:
+          path: ros_ws/src
+      - name: Install ros2_system_manager extra dependencies
+        run: |
+          # Display Python version
+          python3 -c "import sys; print(sys.version)"
+          # Make group ros2sm
+          sudo groupadd ros2sm
+          # Upgrade documentation
+          sudo -H python3 -m pip install --upgrade pydocstyle
+      # https://github.com/ros-tooling/action-ros-ci
+      - uses: ros-tooling/setup-ros@v0.2
+        with:
+          required-ros-distributions: foxy
+      - uses: ros-tooling/action-ros-ci@v0.2
+        with:
+          package-name: ros2_system_manager
+          target-ros2-distro: foxy
 
   deploy:
     name: Deploy on PIP
@@ -36,19 +41,19 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/')
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
-    - name: Set up Python
-      uses: actions/setup-python@v2.2.2
-      with:
-        python-version: '3.x'
-    - name: Install dependencies
-      run: |
-        sudo -H python -m pip install --upgrade pip
-        sudo -H pip install setuptools wheel twine
-    - name: Build and publish
-      env:
-        TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
-        TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
-      run: |
-        sudo python setup.py sdist
-        twine upload dist/*
+      - uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2.2.2
+        with:
+          python-version: '3.x'
+      - name: Install dependencies
+        run: |
+          sudo -H python -m pip install --upgrade pip
+          sudo -H pip install setuptools wheel twine
+      - name: Build and publish
+        env:
+          TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
+          TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+        run: |
+          sudo python setup.py sdist
+          twine upload dist/*
