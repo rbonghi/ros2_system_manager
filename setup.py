@@ -24,14 +24,16 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
 # EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import os
 import grp
+import os
 import re
-import sys
 import logging
+import sys
+
 # Always prefer setuptools over distutils
-from setuptools import find_packages, setup
 from glob import glob
+
+from setuptools import find_packages, setup
 from os import path
 from shutil import copyfile
 

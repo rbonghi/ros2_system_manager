@@ -24,14 +24,13 @@
 # EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import os
-import queue
 from grp import getgrnam
-import sys
+import queue
 import logging
-import stat
-
+import sys
 from multiprocessing import Event, Process, Queue, Value
 from multiprocessing.managers import SyncManager
+import stat
 
 from .common import get_key
 from .exceptions import SystemManagerException
@@ -65,6 +64,7 @@ class SystemManager(SyncManager):
 
 
 class SystemManagerServer(Process):
+
     def __init__(self, force=False):
         self.force = force
         # Check if running a root
