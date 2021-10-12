@@ -21,12 +21,12 @@
 # Always prefer setuptools over distutils
 from glob import glob
 from os import path
-from shutil import copyfile
 import grp
 import logging
 import os
 import re
 import sys
+from shutil import copyfile
 
 from setuptools import find_packages, setup
 from setuptools.command.develop import develop

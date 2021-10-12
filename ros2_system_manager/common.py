@@ -19,10 +19,10 @@
 
 from base64 import b64encode
 from random import choice
-from string import ascii_letters
 import logging
 import os
 import re
+from string import ascii_letters
 # Load Author
 AUTH_RE = re.compile(r""".*__author__ = ["'](.*?)['"]""", re.S)
 # Create logger
