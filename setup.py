@@ -136,7 +136,7 @@ def install_services(copy):
 
 
 def pre_installer(installer, obj, copy):
-    group = 'system_manager'
+    group = 'ros2sm'
     # Get user
     user = os.getenv("SUDO_USER", os.getenv("USER"))
     if user is None:

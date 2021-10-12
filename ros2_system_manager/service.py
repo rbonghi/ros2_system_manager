@@ -41,7 +41,7 @@ logger = logging.getLogger(__name__)
 # https://refspecs.linuxfoundation.org/FHS_3.0/fhs/ch05s13.html
 # https://en.wikipedia.org/wiki/Filesystem_Hierarchy_Standard
 ROBOT_PIPE = '/run/ros2sm.sock'
-ROBOT_USER = 'system_manager'
+ROBOT_USER = 'ros2sm'
 # Gain timeout lost connection
 TIMEOUT_GAIN = 3
 TIMEOUT_SWITCHOFF = 3.0

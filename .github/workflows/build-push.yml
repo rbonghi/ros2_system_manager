@@ -1,0 +1,55 @@
+name: CI & CD
+
+# Reference:
+# https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#on
+on: [push, pull_request]
+
+# Reference
+# https://help.github.com/en/actions/language-and-framework-guides/using-python-with-github-actions
+
+jobs:
+  build:
+    name: Test package ROS2
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python
+      uses: actions/setup-python@v1
+      with:
+        python-version: '3.x'
+    - name: Install dependencies
+      run: |
+        # Make group ros2sm
+        sudo groupadd ros2sm
+        # Upgrade pip
+        sudo -H python3 -m pip3 install --upgrade pip
+        # Upgrade documentation
+        sudo -H python3 -m pip3 install --upgrade pydocstyle
+    - name: Display Python version
+      run: python3 -c "import sys; print(sys.version)"
+    - name: Colcon test
+      run: |
+        echo run colcon test
+
+  deploy:
+    name: Deploy on PIP
+    needs: [build]
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python
+      uses: actions/setup-python@v1
+      with:
+        python-version: '3.x'
+    - name: Install dependencies
+      run: |
+        sudo -H python -m pip install --upgrade pip
+        sudo -H pip install setuptools wheel twine
+    - name: Build and publish
+      env:
+        TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
+        TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+      run: |
+        sudo python setup.py sdist
+        twine upload dist/*
