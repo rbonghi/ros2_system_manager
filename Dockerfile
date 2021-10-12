@@ -1,6 +1,7 @@
 # GNU General Public License 3.0
 #
-# This file is part of the ros2_system_manager package (https://github.com/rbonghi/ros2_system_manager or http://rnext.it).
+# This file is part of the ros2_system_manager
+# package (https://github.com/rbonghi/ros2_system_manager or http://rnext.it).
 # Copyright (c) 2021 Raffaello Bonghi.
 #
 # This program is free software: you can redistribute it and/or modify
