@@ -30,14 +30,6 @@ logger = logging.getLogger(__name__)
 
 
 def get_var(MATCH_RE):
-    """Check if a variable is in a file.
-
-    Args:
-        MATCH_RE (string): Matching string
-
-    Returns:
-        bool: true if is contained in the string
-    """
     # Load version package
     with open(os.path.join(os.path.abspath(os.path.dirname(__file__)), '__init__.py')) as fp:
         match = MATCH_RE.match(fp.read())

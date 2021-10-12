@@ -39,11 +39,6 @@ log = logging.getLogger()
 
 # https://gist.github.com/anantkamath/623ce7f5432680749e087cf8cfba9b69
 def runningInDocker():
-    """Detect this package is installed in a docker container.
-
-    Returns
-        bool: True if is running in a docker container
-    """
     with open('/proc/self/cgroup', 'r') as procfile:
         for line in procfile:
             fields = line.strip().split('/')
