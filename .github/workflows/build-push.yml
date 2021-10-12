@@ -13,20 +13,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: Set up Python
-      uses: actions/setup-python@v2.2.2
-      with:
-        python-version: '3.x'
-    - name: Install dependencies
+    - name: Install ros2_system_manager extra dependencies
       run: |
+        # Display Python version
+        python3 -c "import sys; print(sys.version)"
         # Make group ros2sm
         sudo groupadd ros2sm
-        # Upgrade pip
-        sudo -H python3 -m pip install --upgrade pip
         # Upgrade documentation
         sudo -H python3 -m pip install --upgrade pydocstyle
-    - name: Display Python version
-      run: python3 -c "import sys; print(sys.version)"
+    # https://github.com/ros-tooling/action-ros-ci
     - uses: ros-tooling/setup-ros@v0.2
       with:
         required-ros-distributions: foxy
@@ -34,9 +29,6 @@ jobs:
       with:
         package-name: ros2_system_manager
         target-ros2-distro: foxy
-    - name: Colcon test
-      run: |
-        colcon test
 
   deploy:
     name: Deploy on PIP
