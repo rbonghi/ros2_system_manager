@@ -43,7 +43,7 @@ def get_var(MATCH_RE):
 
     Returns:
         bool: true if is contained in the string
-    """    
+    """
     # Load version package
     with open(os.path.join(os.path.abspath(os.path.dirname(__file__)), '__init__.py')) as fp:
         match = MATCH_RE.match(fp.read())
