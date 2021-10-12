@@ -23,3 +23,4 @@ def test_flake8():
     assert rc == 0, \
         'Found %d code style errors / warnings:\n' % len(errors) + \
         '\n'.join(errors)
+# EOF
