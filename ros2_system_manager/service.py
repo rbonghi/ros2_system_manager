@@ -1,4 +1,3 @@
-# -*- coding: UTF-8 -*-
 # Copyright (C) 2021, Raffaello Bonghi <raffaello@rnext.it>
 # All rights reserved
 # Redistribution and use in source and binary forms, with or without
@@ -25,14 +24,15 @@
 # EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 import queue
-import sys
 import os
-import stat
+import sys
 from grp import getgrnam
+import stat
 # Logging
 import logging
-from multiprocessing import Process, Queue, Event, Value
+from multiprocessing import Event, Process, Queue, Value
 from multiprocessing.managers import SyncManager
+
 from .common import get_key
 from .exceptions import SystemManagerException
 # Create logger for tegrastats
@@ -51,7 +51,7 @@ class SystemManager(SyncManager):
 
     def __init__(self, authkey=None):
         if authkey is None:
-            authkey = get_key().encode("utf-8")
+            authkey = get_key().encode('utf-8')
         super(SystemManager, self).__init__(address=(ROBOT_PIPE), authkey=authkey)
 
     def get_queue(self):
@@ -69,7 +69,7 @@ class SystemManagerServer(Process):
         self.force = force
         # Check if running a root
         if os.getuid() != 0:
-            raise SystemManagerException("ros2_system_manager service need sudo to work")
+            raise SystemManagerException('ros2_system_manager service need sudo to work')
         # Error queue
         self._error = Queue()
         # Command queue
@@ -85,20 +85,20 @@ class SystemManagerServer(Process):
         # Register stats
         # https://docs.python.org/2/library/multiprocessing.html#using-a-remote-manager
         SystemManager.register('get_queue', callable=lambda: self.q)
-        SystemManager.register("sync_data", callable=lambda: self.data)
+        SystemManager.register('sync_data', callable=lambda: self.data)
         SystemManager.register('sync_event', callable=lambda: self.event)
         # Generate key and open broadcaster
         self.broadcaster = SystemManager()
 
     def system_message(self, message):
         if 'shutdown' in message:
-            print(f"Run shutdown system")
-            os.system(f"shutdown -h now")
+            print(f'Run shutdown system')
+            os.system(f'shutdown -h now')
         elif 'reboot' in message:
-            print(f"Run reboot system")
-            os.system(f"reboot")
+            print(f'Run reboot system')
+            os.system(f'reboot')
         else:
-            print(f"Error message: {message}")
+            print(f'Error message: {message}')
 
     def run(self):
         # Initialize variables
@@ -127,7 +127,7 @@ class SystemManagerServer(Process):
         except FileNotFoundError:
             pass
         except Exception as e:
-            logger.error("Error subprocess {error}".format(error=e), exc_info=1)
+            logger.error('Error subprocess {error}'.format(error=e), exc_info=1)
             # Write error messag
             self._error.put(sys.exc_info())
         finally:
@@ -139,20 +139,20 @@ class SystemManagerServer(Process):
             gid = getgrnam(ROBOT_USER).gr_gid
         except KeyError:
             # User does not exist
-            raise SystemManagerException(f"Group {ROBOT_USER} does not exist!")
+            raise SystemManagerException(f'Group {ROBOT_USER} does not exist!')
         # Remove old pipes if exists
         if os.path.exists(ROBOT_PIPE):
             if self.force:
-                logger.info(f"Remove pipe {ROBOT_PIPE}")
+                logger.info(f'Remove pipe {ROBOT_PIPE}')
                 os.remove(ROBOT_PIPE)
             else:
-                raise SystemManagerException("Service already active! \
-                    Please check before run it again")
+                raise SystemManagerException('Service already active! \
+                    Please check before run it again')
         # Start broadcaster
         try:
             self.broadcaster.start()
         except EOFError:
-            raise SystemManagerException("Server already alive")
+            raise SystemManagerException('Server already alive')
         # Initialize synchronized data and conditional
         self.sync_data = self.broadcaster.sync_data()
         self.sync_event = self.broadcaster.sync_event()
@@ -184,13 +184,13 @@ class SystemManagerServer(Process):
         self.q.close()
         self.broadcaster.shutdown()
         # If process is alive wait to quit
-        # logger.debug("Status subprocess {status}".format(status=self.is_alive()))
+        # logger.debug('Status subprocess {status}'.format(status=self.is_alive()))
         while self.is_alive():
             # If process is in timeout manually terminate
             if self.interval.value == -1.0:
-                logger.info("Terminate subprocess")
+                logger.info('Terminate subprocess')
                 self.terminate()
-            logger.info("Wait shutdown subprocess")
+            logger.info('Wait shutdown subprocess')
             self.join(timeout=TIMEOUT_SWITCHOFF)
             self.interval.value = -1.0
         # Close tegrastats
@@ -205,12 +205,12 @@ class SystemManagerServer(Process):
             pass
         self.remove_files()
         # Close stats server
-        logger.info("Service closed")
+        logger.info('Service closed')
         return True
 
     def remove_files(self):
         # If exist remove pipe
         if os.path.exists(ROBOT_PIPE):
-            logger.info("Remove pipe {pipe}".format(pipe=ROBOT_PIPE))
+            logger.info('Remove pipe {pipe}'.format(pipe=ROBOT_PIPE))
             os.remove(ROBOT_PIPE)
 # EOF

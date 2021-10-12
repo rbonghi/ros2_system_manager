@@ -1,4 +1,3 @@
-# -*- coding: UTF-8 -*-
 # Copyright (C) 2021, Raffaello Bonghi <raffaello@rnext.it>
 # All rights reserved
 # Redistribution and use in source and binary forms, with or without
@@ -26,9 +25,8 @@
 
 
 class SystemManagerException(Exception):
-    """ Robot manager general exception """
-
-    def __init__(self, message, errors=""):
+    """ Robot manager general exception"""
+    def __init__(self, message, errors=''):
         super(SystemManagerException, self).__init__(message, errors)
         # Now for your custom code...
         self.message = message

@@ -1,4 +1,3 @@
-# -*- coding: UTF-8 -*-
 # Copyright (C) 2021, Raffaello Bonghi <raffaello@rnext.it>
 # All rights reserved
 # Redistribution and use in source and binary forms, with or without
@@ -24,11 +23,11 @@
 # OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
 # EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-import re
 import os
+import re
 from random import choice
-from string import ascii_letters
 from base64 import b64encode
+from string import ascii_letters
 # Logging
 import logging
 # Load Author
@@ -44,12 +43,12 @@ def get_var(MATCH_RE):
     :rtype: string
     """
     # Load version package
-    with open(os.path.join(os.path.abspath(os.path.dirname(__file__)), "__init__.py")) as fp:
+    with open(os.path.join(os.path.abspath(os.path.dirname(__file__)), '__init__.py')) as fp:
         match = MATCH_RE.match(fp.read())
         value = match.group(1) if match else ''.join(choice(ascii_letters) for i in range(16))
     return value
 
 
 def get_key():
-    return str(b64encode(get_var(AUTH_RE).encode("utf-8")))
+    return str(b64encode(get_var(AUTH_RE).encode('utf-8')))
 # EOF
