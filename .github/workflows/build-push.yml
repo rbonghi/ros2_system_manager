@@ -25,8 +25,6 @@ jobs:
         sudo -H python3 -m pip install --upgrade pip
         # Upgrade documentation
         sudo -H python3 -m pip install --upgrade pydocstyle
-        # install colcon
-        sudo apt-get install python3-colcon-common-extensions
     - name: Display Python version
       run: python3 -c "import sys; print(sys.version)"
     - uses: ros-tooling/action-ros-ci@v0.2
