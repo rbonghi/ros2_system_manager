@@ -34,6 +34,11 @@ jobs:
         with:
           package-name: ros2_system_manager
           target-ros2-distro: foxy
+      - uses: actions/upload-artifact@v1
+        with:
+          name: colcon-logs
+          path: ${{ steps.action_ros_ci_step.outputs.ros-workspace-directory-name }}/log
+        if: always() # upload the logs even when the build fails
 
   deploy:
     name: Deploy on PIP

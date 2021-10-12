@@ -22,9 +22,9 @@ import logging
 import os
 import queue
 import stat
-import sys
 from multiprocessing import Event, Process, Queue, Value
 from multiprocessing.managers import SyncManager
+import sys
 
 from .common import get_key
 from .exceptions import SystemManagerException

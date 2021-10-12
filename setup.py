@@ -19,14 +19,14 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 # Always prefer setuptools over distutils
+import grp
 from glob import glob
 from os import path
-import grp
+from shutil import copyfile
 import logging
 import os
 import re
 import sys
-from shutil import copyfile
 
 from setuptools import find_packages, setup
 from setuptools.command.develop import develop
