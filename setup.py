@@ -47,6 +47,10 @@ def runningInDocker():
     return False
 
 
+def check_systemctl():
+    return os.path.exists('/bin/systemctl')
+
+
 def is_superuser():
     return os.getuid() == 0
 
@@ -136,7 +140,7 @@ def pre_installer(installer, obj, copy):
     if user is None:
         user = os.getenv('USER')
     # Install services
-    if not runningInDocker() and is_superuser():
+    if not runningInDocker() and is_superuser() and check_systemctl():
         print('Install services')
         # Install services
         install_services(copy)
