@@ -50,7 +50,7 @@ jobs:
       id: meta
       uses: crazy-max/ghaction-docker-meta@v3.5.0
       with:
-        images: nanosaur/webgui
+        images: rbonghi/ros2_system_manager
         # generate Docker tags based on the following events/attributes
         tags: |
           type=ref,event=branch
