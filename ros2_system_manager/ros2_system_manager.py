@@ -24,6 +24,7 @@ from std_srvs.srv import Empty
 
 from .exceptions import SystemManagerException
 from .system_manager import system_manager
+from .common import get_var
 
 
 class system_manager_wrapper(Node):
@@ -35,7 +36,8 @@ class system_manager_wrapper(Node):
         self.srv = self.create_service(Empty, 'shutdown', self.shutdown)
         self.srv = self.create_service(Empty, 'reboot', self.reboot)
         # Node started
-        self.get_logger().info('Hello system_manager!')
+        version = get_var()
+        self.get_logger().info(f'System_manager {version} started')
 
     def shutdown(self, request, response):
         self.get_logger().info(f'System shutdown')

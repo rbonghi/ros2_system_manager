@@ -40,6 +40,11 @@ def main():
                         help=argparse.SUPPRESS,
                         action='store_true',
                         default=False)
+    parser.add_argument('--debug',
+                        dest='debug',
+                        help=argparse.SUPPRESS,
+                        action='store_true',
+                        default=False)
     parser.add_argument('-v', '--version',
                         action='version',
                         version='%(prog)s {version}'.format(version=get_var(VERSION_RE)))
@@ -47,7 +52,7 @@ def main():
     args = parser.parse_args()
     try:
         # Initialize system manager server
-        server = SystemManagerServer(force=args.force)
+        server = SystemManagerServer(force=args.force, debug=args.debug)
         logger.info('robot_manager server loaded')
         print('ROS2 system manager running')
         server.loop_for_ever()

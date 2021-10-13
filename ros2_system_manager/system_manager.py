@@ -18,15 +18,16 @@
 # along with this program. If not, see <https://www.gnu.org/licenses/>.
 
 import logging
+import re
 from multiprocessing import AuthenticationError, Event
 
 from .exceptions import SystemManagerException
 from .service import SystemManager
+from .common import get_var
 # Create logger
 logger = logging.getLogger(__name__)
 # Gain timeout lost connection
 TIMEOUT_GAIN = 3
-
 
 class system_manager:
 
@@ -59,6 +60,15 @@ class system_manager:
     def reboot(self):
         # Send new nvpmodel
         self._controller.put({'system': 'reboot'})
+
+    def _get_server_config(self):
+        while True:
+            # Send configuration connection
+            self._controller.put({'config': {}})
+            # Return configuration
+            data = self._controller.get(self._interval * TIMEOUT_GAIN)
+            if 'config' in data:
+                return data['config']
 
     def _start(self):
         # Connected to broadcaster
@@ -96,4 +106,14 @@ class system_manager:
         self._controller = self._broadcaster.get_queue()
         self._sync_data = self._broadcaster.sync_data()
         self._sync_event = self._broadcaster.sync_event()
+        # Initialize connection
+        server_config = self._get_server_config()
+        client_version = get_var()
+        server_version = server_config['version']
+        # Check server/client package
+        if server_version != client_version:
+            raise SystemManagerException(f"Mismatch server version:\
+                                        \n Server: {server_version} \
+                                        \n Client: {client_version} \
+                                        \nPlease update package!")
 # EOF

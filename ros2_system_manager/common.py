@@ -25,11 +25,13 @@ import re
 from string import ascii_letters
 # Load Author
 AUTH_RE = re.compile(r""".*__author__ = ["'](.*?)['"]""", re.S)
+# Version match
+VERSION_RE = re.compile(r""".*__version__ = ["'](.*?)['"]""", re.S)
 # Create logger
 logger = logging.getLogger(__name__)
 
 
-def get_var(MATCH_RE):
+def get_var(MATCH_RE=VERSION_RE):
     # Load version package
     with open(os.path.join(os.path.abspath(os.path.dirname(__file__)), '__init__.py')) as fp:
         match = MATCH_RE.match(fp.read())

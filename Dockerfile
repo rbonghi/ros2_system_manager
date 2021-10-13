@@ -26,6 +26,12 @@ WORKDIR $ROS_WS
 
 ADD . $ROS_WS/src/ros2_system_manager
 
+# Install all ROS2 required packages
+RUN apt-get update && \
+    cd $ROS_WS && \
+    rosdep install --from-paths src --ignore-src -r -y && \
+    rm -rf /var/lib/apt/lists/*
+
 # Load ROS2 sources
 RUN . /opt/ros/$ROS_DISTRO/setup.sh && \
     cd $ROS_WS && \
@@ -39,4 +45,4 @@ RUN sed --in-place --expression \
       /ros_entrypoint.sh
 
 # run ros package launch file
-CMD ["ros2", "run", "ros2_system_manager", "system_manager"]
+CMD ["ros2", "launch", "ros2_system_manager", "joy_system_manager.launch.py"]

@@ -239,6 +239,7 @@ setup(
     entry_points={'console_scripts': [
         'system_manager_server=ros2_system_manager.__main__:main',
         'system_manager=ros2_system_manager.ros2_system_manager:main',
+        'joy2sm=ros2_system_manager.joy2sm:main',
         ]},
 )
 # EOF

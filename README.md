@@ -32,7 +32,7 @@ docker build -t rbonghi/ros2_system_manager:latest .
 
 ## Develop
 ```
-docker run -it --rm --network host -v /run/ros2sm.sock:/run/ros2sm.sock -v $HOME/ros2_system_manager:/opt/ros_ws/src/ros2_system_manager rbonghi/ros2_system_manager:latest bash
+docker run -it --rm --network host -v /run/ros2sm.sock:/run/ros2sm.sock -v $HOME/nanosaur_ws/src/ros2_system_manager:/opt/ros_ws/src/ros2_system_manager rbonghi/ros2_system_manager:latest bash
 ```
 
 # Test

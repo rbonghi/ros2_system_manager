@@ -26,7 +26,7 @@ from multiprocessing import Event, Process, Queue, Value
 from multiprocessing.managers import SyncManager
 import sys
 
-from .common import get_key
+from .common import get_key, get_var
 from .exceptions import SystemManagerException
 # Create logger for tegrastats
 logger = logging.getLogger(__name__)
@@ -59,8 +59,11 @@ class SystemManager(SyncManager):
 
 class SystemManagerServer(Process):
 
-    def __init__(self, force=False):
+    def __init__(self, force=False, debug=False):
         self.force = force
+        self.debug = debug
+        if self.debug:
+            print("Run in debug mode")
         # Check if running a root
         if os.getuid() != 0:
             raise SystemManagerException('ros2_system_manager service need sudo to work')
@@ -86,11 +89,17 @@ class SystemManagerServer(Process):
 
     def system_message(self, message):
         if 'shutdown' in message:
-            print(f'Run shutdown system')
-            os.system(f'shutdown -h now')
+            if not self.debug:
+                print(f'Run shutdown system')
+                os.system(f'shutdown -h now')
+            else:
+                print("Skip shutdown")
         elif 'reboot' in message:
-            print(f'Run reboot system')
-            os.system(f'reboot')
+            if not self.debug:
+                print(f'Run reboot system')
+                os.system(f'reboot')
+            else:
+                print("Skip reboot")
         else:
             print(f'Error message: {message}')
 
@@ -109,6 +118,11 @@ class SystemManagerServer(Process):
                     # Decode system message
                     if 'system' in control:
                         self.system_message(control['system'])
+                    # Decode server config message
+                    if 'config' in control:
+                        self.q.put({'config': {
+                            'version': get_var()
+                        }})
                     # Update timeout interval
                     timeout = TIMEOUT_GAIN if interval <= TIMEOUT_GAIN else interval * TIMEOUT_GAIN
                 except queue.Empty:
