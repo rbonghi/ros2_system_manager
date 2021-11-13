@@ -26,6 +26,8 @@ WORKDIR $ROS_WS
 
 ADD . $ROS_WS/src/ros2_system_manager
 
+ENV DOCKER_CONTAINER Yes
+
 # Install all ROS2 required packages
 RUN apt-get update && \
     cd $ROS_WS && \

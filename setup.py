@@ -140,7 +140,7 @@ def pre_installer(installer, obj, copy):
     if user is None:
         user = os.getenv('USER')
     # Install services
-    if not runningInDocker() and is_superuser() and check_systemctl():
+    if not runningInDocker() and is_superuser() and check_systemctl() and not os.environ.get('DOCKER_CONTAINER', False):
         print('Install services')
         # Install services
         install_services(copy)
