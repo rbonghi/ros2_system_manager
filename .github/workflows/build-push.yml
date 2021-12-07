@@ -48,7 +48,7 @@ jobs:
     # https://github.com/docker/build-push-action/blob/master/docs/advanced/tags-labels.md
     - name: Docker meta
       id: meta
-      uses: crazy-max/ghaction-docker-meta@v3.6.0
+      uses: crazy-max/ghaction-docker-meta@v3.6.2
       with:
         images: rbonghi/ros2_system_manager
         # generate Docker tags based on the following events/attributes
