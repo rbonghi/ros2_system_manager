@@ -15,7 +15,7 @@ jobs:
       - name: setup directories
         run: mkdir -p ros_ws/src
       - name: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           path: ros_ws/src
       - name: Install ros2_system_manager extra dependencies
@@ -43,7 +43,7 @@ jobs:
     runs-on: ubuntu-latest #self-hosted
     steps:
     - name: Checkout
-      uses: actions/checkout@v2.3.4
+      uses: actions/checkout@v3
 
     # https://github.com/docker/build-push-action/blob/master/docs/advanced/tags-labels.md
     - name: Docker meta
@@ -93,7 +93,7 @@ jobs:
           sudo apt-get install twine -y
           sudo -H python3 -m pip install --upgrade pip
           sudo -H pip3 install setuptools wheel twine
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Build and publish
         env:
           TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
